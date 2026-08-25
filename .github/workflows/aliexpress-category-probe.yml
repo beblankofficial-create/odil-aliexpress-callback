@@ -1,0 +1,47 @@
+name: AliExpress Category Probe
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - probe/TRIGGER.txt
+
+permissions:
+  contents: read
+
+jobs:
+  fetch-categories:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      ALIEXPRESS_APP_KEY: ${{ secrets.ALIEXPRESS_APP_KEY }}
+      ALIEXPRESS_APP_SECRET: ${{ secrets.ALIEXPRESS_APP_SECRET }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Verify secrets
+        shell: bash
+        run: |
+          if [ -z "$ALIEXPRESS_APP_KEY" ] || [ -z "$ALIEXPRESS_APP_SECRET" ]; then
+            echo "Missing ALIEXPRESS_APP_KEY and/or ALIEXPRESS_APP_SECRET"
+            exit 2
+          fi
+
+      - name: Fetch AliExpress categories
+        run: python probe/fetch_affiliate_categories.py
+
+      - name: Upload output
+        uses: actions/upload-artifact@v4
+        with:
+          name: aliexpress-category-probe-${{ github.run_id }}
+          path: output/
+          if-no-files-found: error
+          retention-days: 14
