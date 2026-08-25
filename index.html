@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>ODIL AliExpress Callback</title>
+  <style>
+    body{font-family:Arial,sans-serif;max-width:680px;margin:64px auto;padding:0 20px;line-height:1.6;color:#222}
+    .card{border:1px solid #ddd;border-radius:14px;padding:24px}
+    .ok{font-weight:700}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>ODIL AliExpress Callback</h1>
+    <p class="ok">Callback endpoint is active.</p>
+    <p id="status">You can close this page.</p>
+  </div>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('code')) {
+      document.getElementById('status').textContent = 'Authorization response received. You can close this page.';
+    }
+  </script>
+</body>
+</html>
